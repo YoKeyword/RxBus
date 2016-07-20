@@ -10,19 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import me.yokeyword.rxbus.event.Event;
 import me.yokeyword.rxbus.event.EventSticky;
 import me.yokeyword.rxbus.rx.RxBus;
+import me.yokeyword.rxbus.rx.RxBusSubscriber;
 import me.yokeyword.rxbus.rx.RxSubscriptions;
 import me.yokeyword.rxbus.util.TUtil;
-import rx.Observable;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Func1;
-import rx.functions.Func2;
 
 /**
  * 观察者(订阅者)
@@ -83,40 +80,31 @@ public class SubscriberFragment extends Fragment {
                         return event;
                     }
                 })
-                .subscribe(
-                        new Subscriber<Event>() {
-                            @Override
-                            public void onCompleted() {
-                                Log.i(TAG, "onCompleted");
-                            }
+                .subscribe(new RxBusSubscriber<Event>() {
+                    @Override
+                    protected void onEvent(Event myEvent) {
+                        Log.i(TAG, "onNext--->" + myEvent.event);
+                        String str = mTvResult.getText().toString();
+                        mTvResult.setText(TextUtils.isEmpty(str) ? String.valueOf(myEvent.event) : str + ", " + myEvent.event);
 
-                            @Override
-                            public void onError(Throwable e) {
-                                Log.e(TAG, "onError");
-                                e.printStackTrace();
-
-                                /**
-                                 * 这里注意: 一旦订阅过程中发生异常,走到onError,则代表此次订阅事件完成,后续将收不到onNext()事件,
-                                 * 即 接受不到后续的任何事件,实际环境中,我们需要在onError里 重新订阅事件!
-                                 */
-                                subscribeEvent();
-                            }
-
-                            @Override
-                            public void onNext(Event myEvent) {
-                                Log.i(TAG, "onNext--->" + myEvent.event);
-                                String str = mTvResult.getText().toString();
-                                mTvResult.setText(TextUtils.isEmpty(str) ? String.valueOf(myEvent.event) : str + ", " + myEvent.event);
-
-                                // 这里模拟产生 Error
-                                if (mCheckBox.isChecked()) {
-                                    myEvent = null;
-                                    int error = myEvent.event;
-                                }
-                            }
+                        // 这里模拟产生 Error
+                        if (mCheckBox.isChecked()) {
+                            myEvent = null;
+                            int error = myEvent.event;
                         }
+                    }
 
-                );
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        Log.e(TAG, "onError");
+                        /**
+                         * 这里注意: 一旦订阅过程中发生异常,走到onError,则代表此次订阅事件完成,后续将收不到onNext()事件,
+                         * 即 接受不到后续的任何事件,实际环境中,我们需要在onError里 重新订阅事件!
+                         */
+                        subscribeEvent();
+                    }
+                });
         RxSubscriptions.add(mRxSub);
 
         TUtil.showShort(getActivity(), R.string.resubscribe);
@@ -147,44 +135,30 @@ public class SubscriberFragment extends Fragment {
                             return eventSticky;
                         }
                     })
-                    .subscribe(
-                            new Subscriber<EventSticky>() {
-                                @Override
-                                public void onCompleted() {
-                                    Log.i(TAG, "onCompleted--Sticky");
-                                }
+                    .subscribe(new RxBusSubscriber<EventSticky>() {
+                        @Override
+                        protected void onEvent(EventSticky eventSticky) {
+                            Log.i(TAG, "onNext--Sticky-->" + eventSticky.event);
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    Log.e(TAG, "onError--Sticky");
-                                    e.printStackTrace();
-                                    /**
-                                     * 这里注意: Sticky事件 不能在onError时重绑事件,这可能导致因绑定时得到引起Error的Sticky数据而产生死循环
-                                     */
-                                }
+                            String str = mTvResultSticky.getText().toString();
+                            mTvResultSticky.setText(TextUtils.isEmpty(str) ? String.valueOf(eventSticky.event) : str + ", " + eventSticky.event);
 
-                                @Override
-                                public void onNext(EventSticky myEvent) {
-                                    // 为了避免走onError导致结束了订阅事件, onNext内要try,catch
-                                    try {
-                                        Log.i(TAG, "onNext--Sticky-->" + myEvent.event);
-
-                                        String str = mTvResultSticky.getText().toString();
-                                        mTvResultSticky.setText(TextUtils.isEmpty(str) ? String.valueOf(myEvent.event) : str + ", " + myEvent.event);
-
-                                        // 这里模拟产生 Error
-                                        if (mCheckBox.isChecked()) {
-                                            myEvent = null;
-                                            String error = myEvent.event;
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        TUtil.showShort(getActivity(), R.string.sticky);
-                                    }
-                                }
+                            // 这里模拟产生 Error
+                            if (mCheckBox.isChecked()) {
+                                eventSticky = null;
+                                String error = eventSticky.event;
                             }
+                        }
 
-                    );
+                        @Override
+                        public void onError(Throwable e) {
+                            super.onError(e);
+                            Log.e(TAG, "onError--Sticky");
+                            /**
+                             * 这里注意: Sticky事件 不能在onError时重绑事件,这可能导致因绑定时得到引起Error的Sticky数据而产生死循环
+                             */
+                        }
+                    });
             RxSubscriptions.add(mRxSubSticky);
 
             mBtnSubscribeSticky.setText(R.string.unsubscribeSticky);

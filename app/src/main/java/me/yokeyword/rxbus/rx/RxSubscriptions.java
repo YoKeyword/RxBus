@@ -4,6 +4,8 @@ import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
 /**
+ * 管理 CompositeSubscription
+ * <p>
  * Created by YoKeyword on 16/7/19.
  */
 public class RxSubscriptions {

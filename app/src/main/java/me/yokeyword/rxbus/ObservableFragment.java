@@ -12,7 +12,6 @@ import android.widget.TextView;
 import me.yokeyword.rxbus.event.Event;
 import me.yokeyword.rxbus.event.EventSticky;
 import me.yokeyword.rxbus.rx.RxBus;
-import me.yokeyword.rxbus.util.TUtil;
 
 /**
  * 被观察者
