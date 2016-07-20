@@ -1,10 +1,9 @@
-package me.yokeyword.rxbus;
+package me.yokeyword.rxbusdemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import me.yokeyword.rxbus.rx.RxBus;
-
+import me.yokeyword.rxbus.RxBus;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        
+
         // 移除所有Sticky事件
         RxBus.getDefault().removeAllStickyEvents();
     }

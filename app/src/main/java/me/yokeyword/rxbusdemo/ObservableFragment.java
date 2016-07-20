@@ -1,4 +1,4 @@
-package me.yokeyword.rxbus;
+package me.yokeyword.rxbusdemo;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import me.yokeyword.rxbus.event.Event;
-import me.yokeyword.rxbus.event.EventSticky;
-import me.yokeyword.rxbus.rx.RxBus;
+import me.yokeyword.rxbus.RxBus;
+import me.yokeyword.rxbusdemo.event.Event;
+import me.yokeyword.rxbusdemo.event.EventSticky;
 
 /**
  * 被观察者

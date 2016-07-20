@@ -1,4 +1,4 @@
-package me.yokeyword.rxbus.event;
+package me.yokeyword.rxbusdemo.event;
 
 /**
  * Created by YoKeyword on 16/7/19.

@@ -1,4 +1,4 @@
-package me.yokeyword.rxbus;
+package me.yokeyword.rxbusdemo;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,12 +12,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import me.yokeyword.rxbus.event.Event;
-import me.yokeyword.rxbus.event.EventSticky;
-import me.yokeyword.rxbus.rx.RxBus;
-import me.yokeyword.rxbus.rx.RxBusSubscriber;
-import me.yokeyword.rxbus.rx.RxSubscriptions;
-import me.yokeyword.rxbus.util.TUtil;
+import me.yokeyword.rxbus.RxBus;
+import me.yokeyword.rxbus.RxBusSubscriber;
+import me.yokeyword.rxbusdemo.event.Event;
+import me.yokeyword.rxbusdemo.event.EventSticky;
+import me.yokeyword.rxbusdemo.helper.RxSubscriptions;
+import me.yokeyword.rxbusdemo.helper.TUtil;
 import rx.Subscription;
 import rx.functions.Func1;
 
@@ -90,6 +90,7 @@ public class SubscriberFragment extends Fragment {
                         // 这里模拟产生 Error
                         if (mCheckBox.isChecked()) {
                             myEvent = null;
+                            TUtil.showShort(getActivity(), R.string.resubscribe);
                             int error = myEvent.event;
                         }
                     }
@@ -146,6 +147,8 @@ public class SubscriberFragment extends Fragment {
                             // 这里模拟产生 Error
                             if (mCheckBox.isChecked()) {
                                 eventSticky = null;
+
+                                TUtil.showShort(getActivity(), R.string.sticky);
                                 String error = eventSticky.event;
                             }
                         }

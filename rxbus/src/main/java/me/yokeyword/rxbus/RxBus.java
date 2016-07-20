@@ -1,4 +1,4 @@
-package me.yokeyword.rxbus.rx;
+package me.yokeyword.rxbus;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

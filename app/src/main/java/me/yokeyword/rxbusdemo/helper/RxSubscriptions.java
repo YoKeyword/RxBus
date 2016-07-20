@@ -1,4 +1,4 @@
-package me.yokeyword.rxbus.rx;
+package me.yokeyword.rxbusdemo.helper;
 
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;

@@ -1,4 +1,4 @@
-package me.yokeyword.rxbus;
+package me.yokeyword.rxbusdemo;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

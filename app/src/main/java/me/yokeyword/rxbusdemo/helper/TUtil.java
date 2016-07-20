@@ -1,4 +1,4 @@
-package me.yokeyword.rxbus.util;
+package me.yokeyword.rxbusdemo.helper;
 
 import android.content.Context;
 import android.widget.Toast;

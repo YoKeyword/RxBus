@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="me.yokeyword.rxbus.MainActivity">
+    tools:context="me.yokeyword.rxbusdemo.MainActivity">
 
     <FrameLayout
         android:id="@+id/fl_subscriber"
