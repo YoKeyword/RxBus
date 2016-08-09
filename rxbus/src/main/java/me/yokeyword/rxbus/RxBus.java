@@ -11,7 +11,7 @@ import rx.subjects.Subject;
 
 /**
  * PublishSubject: 只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
- * <p>
+ * <p/>
  * Created by YoKeyword on 2015/6/17.
  */
 public class RxBus {
@@ -84,7 +84,7 @@ public class RxBus {
             final Object event = mStickyEventMap.get(eventType);
 
             if (event != null) {
-                return Observable.merge(observable, Observable.create(new Observable.OnSubscribe<T>() {
+                return observable.mergeWith(Observable.create(new Observable.OnSubscribe<T>() {
                     @Override
                     public void call(Subscriber<? super T> subscriber) {
                         subscriber.onNext(eventType.cast(event));
