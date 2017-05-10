@@ -89,9 +89,7 @@ public class SubscriberFragment extends Fragment {
 
                         // 这里模拟产生 Error
                         if (mCheckBox.isChecked()) {
-                            myEvent = null;
-                            TUtil.showShort(getActivity(), R.string.resubscribe);
-                            int error = myEvent.event;
+                            throw new RuntimeException("模拟异常");
                         }
                     }
 
@@ -146,10 +144,7 @@ public class SubscriberFragment extends Fragment {
 
                             // 这里模拟产生 Error
                             if (mCheckBox.isChecked()) {
-                                eventSticky = null;
-
-                                TUtil.showShort(getActivity(), R.string.sticky);
-                                String error = eventSticky.event;
+                                throw new RuntimeException("模拟异常");
                             }
                         }
 

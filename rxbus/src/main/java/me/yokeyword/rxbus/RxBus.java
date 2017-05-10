@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
@@ -84,12 +83,7 @@ public class RxBus {
             final Object event = mStickyEventMap.get(eventType);
 
             if (event != null) {
-                return observable.mergeWith(Observable.create(new Observable.OnSubscribe<T>() {
-                    @Override
-                    public void call(Subscriber<? super T> subscriber) {
-                        subscriber.onNext(eventType.cast(event));
-                    }
-                }));
+                return observable.mergeWith(Observable.just(eventType.cast(event)));
             } else {
                 return observable;
             }
