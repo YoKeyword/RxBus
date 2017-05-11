@@ -18,7 +18,9 @@ import me.yokeyword.rxbusdemo.event.Event;
 import me.yokeyword.rxbusdemo.event.EventSticky;
 import me.yokeyword.rxbusdemo.helper.RxSubscriptions;
 import me.yokeyword.rxbusdemo.helper.TUtil;
+import rx.Observable;
 import rx.Subscription;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
 /**
@@ -122,16 +124,27 @@ public class SubscriberFragment extends Fragment {
             Log.i(TAG, "获取到StickyEvent--->" + s);
 
             mRxSubSticky = RxBus.getDefault().toObservableSticky(EventSticky.class)
-                    // 建议在Sticky时,在操作符内主动try,catch
-                    .map(new Func1<EventSticky, EventSticky>() {
+                    .flatMap(new Func1<EventSticky, Observable<EventSticky>>() {
                         @Override
-                        public EventSticky call(EventSticky eventSticky) {
-                            try {
-                                // 变换操作
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            return eventSticky;
+                        public Observable<EventSticky> call(EventSticky eventSticky) {
+                            return Observable.just(eventSticky)
+                                    .map(new Func1<EventSticky, EventSticky>() {
+                                        @Override
+                                        public EventSticky call(EventSticky eventSticky) {
+                                            // 这里模拟产生 Error
+                                            if (mCheckBox.isChecked()) {
+                                                throw new RuntimeException("模拟异常");
+                                            }
+                                            return eventSticky;
+                                        }
+                                    })
+                                    .doOnError(new Action1<Throwable>() {
+                                        @Override
+                                        public void call(Throwable throwable) {
+                                            Log.e(TAG, "onError--Sticky");
+                                        }
+                                    })
+                                    .onErrorResumeNext(Observable.<EventSticky>empty());
                         }
                     })
                     .subscribe(new RxBusSubscriber<EventSticky>() {
@@ -146,15 +159,6 @@ public class SubscriberFragment extends Fragment {
                             if (mCheckBox.isChecked()) {
                                 throw new RuntimeException("模拟异常");
                             }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            super.onError(e);
-                            Log.e(TAG, "onError--Sticky");
-                            /**
-                             * 这里注意: Sticky事件 不能在onError时重绑事件,这可能导致因绑定时得到引起Error的Sticky数据而产生死循环
-                             */
                         }
                     });
             RxSubscriptions.add(mRxSubSticky);
